@@ -3,9 +3,10 @@ import os
 import asyncio
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import ParseMode, ReplyKeyboardMarkup, KeyboardButton
-from aiogram.utils import executor
 import requests
 from dotenv import load_dotenv
+from flask import Flask, request
+from waitress import serve  # Импортируем Waitress
 
 # Загружаем переменные из .env файла
 load_dotenv()
@@ -161,7 +162,16 @@ async def show_help(message: types.Message):
     )
     await message.reply(help_text, parse_mode=ParseMode.MARKDOWN)
 
-# Запуск бота
-if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+# Инициализация Flask
+app = Flask(__name__)
 
+# Обработчик вебхука
+@app.route('/webhook', methods=['POST'])
+async def webhook():
+    update = types.Update(**request.json)
+    await dp.process_update(update)
+    return 'ok'
+
+# Запуск Waitress
+if __name__ == '__main__':
+    serve(app, host='0.0.0.0', port=3000)  # Используем Waitress для запуска
