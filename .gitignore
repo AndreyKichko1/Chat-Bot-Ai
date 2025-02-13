@@ -1,0 +1,20 @@
+# Конфиденциальные данные
+.env
+*.env.local
+
+# Файлы Python
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# Логи и кэш
+*.log
+*.cache
+
+# IDE
+.idea/
+.vscode/
